@@ -221,6 +221,10 @@ public void showplayer_turn()
 
     }
 
+    public void try_()
+    {
+    	
+    }
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
@@ -229,6 +233,7 @@ public void showplayer_turn()
 		{
 			if(e.getSource() == player_vector[Player.turn%2].txt_vector[i])
 			{
+				//daf
 				player_vector[Player.turn%2].txt_vector[i].setText(Integer.toString(sum));
 				Player.turn = -1;
 				//Player.turn++;
