@@ -5,8 +5,7 @@ public class Start {
 		// TODO Auto-generated method stub
 		Game a = new Game();
 		a.setVisible(true);
-		Thread gamethread = new Thread(a);
-		gamethread.start();
+		
 
 	}
 

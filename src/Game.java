@@ -1,20 +1,12 @@
-import java.awt.Canvas;
+
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 import java.util.Random;
-
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,6 +16,7 @@ public class Game extends JFrame implements Runnable,MouseListener{
 	private int sum = 0;
 
 	 public Dice dice1,dice2,dice3,dice4,dice5;
+	 public Dice my_dice;
 	 public JButton button;
 	 public JLabel l1 = new JLabel("sdgsdg");
 
@@ -31,12 +24,16 @@ public class Game extends JFrame implements Runnable,MouseListener{
 	 public Player player,player1;
 	 public Player[] player_vector;
 	 JPanel show_turn = new JPanel();
-	 private String turn_player = "";
-	 private JLabel turn_text = new JLabel("TURN: "+turn_player);
+	// private String turn_player = "1";
+	 private JLabel turn_text = new JLabel("TURN: "+(Player.turn+1));
 	 //Create a vector to Hold all dices;
 	 public Dice [] dice_vector;
-	 public Dice [] select_dice;
+	 public JLabel[] select_dice;
+	 public JLabel[] temp;
 	 private int select_index = 0;
+	 private int clk_ = 0;
+	 public ArrayList<JLabel> dice_arr = new ArrayList();
+	 private int cat_count = 0;
  	 
 	public Game()
 	{
@@ -58,46 +55,28 @@ public class Game extends JFrame implements Runnable,MouseListener{
 		getContentPane().add(button);
 		
 		
-		//Dice_img = new Add_Image("Dice.png");
 		
-		//Shto zaret ne fushe
-		
-		dice1 = new Dice(20,10,"dice" +generateRandom()+".png",this);
-		dice1.setName("zari1");
-		
-		dice2 = new Dice(20,110,"dice" +generateRandom()+".png",this);
-		dice2.setName("zari2");
-		
-		dice3 = new Dice(20,210,"dice" +generateRandom()+".png",this);
-		dice3.setName("zari3");
-		
-		dice4 = new Dice(20,310,"dice" +generateRandom()+".png",this);
-		dice4.setName("zari4");
-		
-		dice5 = new Dice(20,410,"dice" +generateRandom()+".png",this);
-		dice5.setName("zari5");
-		
-		dice_vector = new Dice[] {dice1,dice2,dice3,dice4,dice5};
-
-		//shton Mouse Listener te cdo imazh i zarave
-		for(int i = 0;i<5;i++)
+		my_dice = new Dice(20,10);
+		getContentPane().add(my_dice);
+		//Add all dice label to arraylist
+		for(int i =0;i<my_dice.dice_label.length;i++)
+			
 		{
-			dice_vector[i].addMouseListener(this);
+			dice_arr.add(my_dice.dice_label[i]);
 		}
+		//shton Mouse Listener te cdo imazh i zarave
+		
+		for(int i = 0;i<my_dice.dice_label.length;i++)
+		{
+			my_dice.dice_label[i].addMouseListener(this);
+		}
+		
 		player = new Player(300,0);
 	    player1 = new Player(550,0);
 	    player_vector = new Player[] {player,player1};
-		
-		//player.setLayout(null);
-		
-		
-		//player.setBounds(player.player_x(),player.player_y(), 200, this.getHeight());
+
 		getContentPane().add(player1);
 		getContentPane().add(player);
-		showplayer_turn();
-		
-		
-		//shton mouse Listener te cdo label i lojtareve
 		for(int i = 0;i<2;i++)
 		{
 			for(int j = 0;j<3;j++)
@@ -106,9 +85,16 @@ public class Game extends JFrame implements Runnable,MouseListener{
 				player_vector[i].txt_vector[j].addMouseListener(this);
 			}
 		}
-		//System.out.println(sum);
-		play_game();
-
+		showplayer_turn();
+		
+		
+		//shton mouse Listener te cdo label i lojtareve
+		
+		System.out.println("SUM: "+ my_dice.return_points());
+		
+		
+		
+			play_game();
 		
 	}
 	
@@ -120,41 +106,43 @@ public class Game extends JFrame implements Runnable,MouseListener{
 		{
 		  public void actionPerformed(ActionEvent e)
 		  {
-			  sum = 0;
-			  //gjenerimi randon i imazheve per zarat
-			  for(int i = 0;i<dice_vector.length;i++)
-			  {
-				  dice_vector[i].change_dice("dice"+ generateRandom()+".png");
-				  //sum = sum + generateRandom();
-				  
-				  
-			  }
-			  //per te ruajtur rradhen e lojtareve 
-			  //qe mos te llogariten piket per lojtrin 2 kur e ka rradhen lotari 1
-			  if(click_count%2==0)
-			  {
-				  Player.turn++;
-				  
-			  }
-			  else {
-				  Player.turn += 2;
-			  }
+			  //Te shtypet buttoni kujr eshte me e vogel se 3 clickper_round
+			  if(player_vector[Player.turn].clickper_round < 3 && cat_count < 2)
+				
 			  
-			  click_count++;
-			  
-			  //regon rradhen ... 
-			  if(Player.turn%2 == 0)
-				{
-					turn_player = "player";
-					turn_text.setText("TURN: "+turn_player);
-				}
-				else if(Player.turn%2 == 1)
-				{
-					turn_player = "player1";
-					turn_text.setText("TURN: "+turn_player);
-				}
-			  System.out.println(return_sum());
+			  {
+				  player_vector[Player.turn].clickper_round++;
+				  System.out.println("Array List size: "+ dice_arr.size());
+				  System.out.println("Player "+ Player.turn + " click/round: "+player_vector[Player.turn].clickper_round);
+				  //gjenerimi randon i imazheve per zarat
+				  click_count = 0;
+				  if(dice_arr.size() == 0)
+				  {
+					  for(int i =0;i<my_dice.dice_label.length;i++)
+						{
+							dice_arr.add(my_dice.dice_label[i]);
+						}
+				  }
+					  for(int i = 0;i<dice_arr.size();i++)
+					  {
+						  int num_ = generateRandom();//****Ketu eshte gabimi sepse i behet random 
+						 
+						  my_dice.change_dice(dice_arr.get(i), num_);
+						  Dice._point_vector[i] = num_;				  
+					  }
+
+					 
+					  click_count++;
+					  
+				
+				  System.out.println("SUM: "+ my_dice.return_points());
+			
+				  dice_arr.removeAll(dice_arr);
+			  }
+			  	
+			 
 		  }
+		  
 		 
 
 		
@@ -183,71 +171,75 @@ public void showplayer_turn()
 {
 
 	show_turn.add(turn_text);
-	show_turn.setBounds(200, 600, 200, 60);
+	show_turn.setBounds(120, 600, 200, 60);
 	show_turn.setBackground(Color.RED);
 	getContentPane().add(show_turn);
 }
-    //The method that gets executed by the thread
-    public void run(){//ASAP
-        //setFocusable(true); 
-        
-        
 
-        /* Menaxhimi i frames*/
-        long lastTime=System.nanoTime();
-        double nanoSecondConversion=1000000000.0/60;//60 frames per second
-        double changeInSeconds=0;
-
-        
-        //Standard
-        while(true){
-            requestFocus();
-            
-           long now=System.nanoTime();
-           changeInSeconds +=(now-lastTime)/nanoSecondConversion;
-            while(changeInSeconds>=1)
-            {
-               // play_game(); 
-                changeInSeconds=0;
-            }
-            
-            lastTime=now;
-
-              
-        }
-       
-        //Dispose  the frame
-        
-
-    }
-
-    public void try_()
-    {
-    		//df
-    }
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 		for(int i = 0;i<player.txt_vector.length;i++)
 		{
-			if(e.getSource() == player_vector[Player.turn%2].txt_vector[i])
+			if(e.getSource() == player_vector[Player.turn].txt_vector[i] && player_vector[Player.turn].clickper_round !=0)
 			{
 				//daf
-				player_vector[Player.turn%2].txt_vector[i].setText(Integer.toString(sum));
-				Player.turn = -1;
-				//Player.turn++;
+				player_vector[Player.turn].txt_vector[i].setText(Integer.toString(my_dice.return_points()));
+				player_vector[Player.turn].clickper_round = 0;
+				
+				Player.turn ++;
+				if(Player.turn == player_vector.length)
+					{
+						cat_count++;
+						Player.turn = 0;
+					}
+				 if(cat_count > 2)
+				  {
+					  System.out.println("END");
+				  }
+
 			}
+			
 		}
-		
-		
-		
-		
+	
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
+		
+			
+				System.out.println("Array List size: "+ dice_arr.size());
+				select_index = 0;
+				for(int x = 0;x<my_dice.dice_label.length;x++ )
+				{
+					
+					if(e.getSource() instanceof JLabel)
+						
+					{
+						
+						JLabel src = (JLabel) e.getSource();
+						
+							if(src  == my_dice.dice_label[x])
+							{
+								System.out.println("Clicked"+x);
+								my_dice.change_dice(my_dice.dice_label[x], 7);
+
+								dice_arr.add(my_dice.dice_label[x]);
+								
+								if(click_count == 0)
+									break;
+								
+								
+							}
+						
+						
+					}
+				}
+
+				System.out.println("SUM: "+ my_dice.return_points());
+			
 		
 	}
 
@@ -265,6 +257,12 @@ public void showplayer_turn()
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		
 	}
