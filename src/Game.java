@@ -161,6 +161,9 @@ public void showplayer_turn()
 				player_vector[Player.turn].txt_vector[i].setText(Integer.toString(my_dice.return_points()));
 				player_vector[Player.turn].clickper_round = 0;
 				
+					
+				player_vector[Player.turn].txt_vector[i].removeMouseListener(this);
+				
 				Player.turn ++;
 				
 				if(Player.turn == player_vector.length)
