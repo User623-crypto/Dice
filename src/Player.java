@@ -28,7 +28,7 @@ public class Player extends JPanel {
 		y = _y;
 		//panel = new JPanel();
 		this.setBackground(Color.RED);
-		this.setBounds(x, y, 200, 600);
+		this.setBounds(x, y, 150, 600);
 		this.setLayout(new FlowLayout());
 
 		
