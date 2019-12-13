@@ -18,8 +18,8 @@ public class Player extends JPanel {
 	//public JPanel panel;
 	private int x;
 	private int y;
-	public JLabel txt1,txt2,txt3;
-	public JLabel[] txt_vector = new JLabel[] {txt1,txt2,txt3};
+	public JLabel txt1,txt2,txt3,txt4,txt5,txt6,txt7,txt8,txt9,txt10,txt11,txt12,txt13;
+	public JLabel[] txt_vector = new JLabel[] {txt1,txt2,txt3,txt4,txt5,txt6,txt7,txt8,txt9,txt10,txt11,txt12,txt13};
 	private int y_level = 20;
 	public int clickper_round = 0;
 	public Player(int _x,int _y)
@@ -36,12 +36,12 @@ public class Player extends JPanel {
 		for(int i = 0;i<txt_vector.length;i++)
 		{
 
-			txt_vector[i] = new JLabel("Score "+(i+1)+ ": 0");
+			txt_vector[i] = new JLabel("Kategoria "+(i+1)+ ": 0");
 
 			txt_vector[i].setName("el"+(i+1));
 			txt_vector[i].setBounds(320, y_level, 100, 50);
 			txt_vector[i].setBackground(Color.WHITE);
-			txt_vector[i].setBorder(BorderFactory.createEmptyBorder(20, 60, 10, 60));
+			txt_vector[i].setBorder(BorderFactory.createEmptyBorder(15, 30, 10, 30));
 			//txt_vector[i].add(new JLabel("Score "+ (i+1) +": 0"));
 			y_level += 100;
 			add(txt_vector[i]);
